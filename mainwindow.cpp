@@ -47,20 +47,18 @@ void MainWindow::on_pushButtonStart_clicked()
     QString valueAsString2 = QString::number(res2);
     ui->listWidget->addItem("Print time->");
     ui->listWidget->addItem(valueAsString2);
+    window2->hide();
 
     //Write-Read test
     int timeStart3 = clock();
     QTextStream out(stdout);
 
-      // Создаем объект класса QFile и связываем его с указанным именем файла
       QString filename = "distros.txt";
       QFile file(filename);
 
-      // Открываем файл в режиме "Только для записи"
       if (file.open(QIODevice::WriteOnly)) {
-        QTextStream out(&file); // поток записываемых данных направляем в файл
+        QTextStream out(&file);
 
-        // Для записи данных в файл используем оператор <<
         for(int count = 0; count<50; count++){
         out << "Xubuntu" << endl;
         out << "Arch" << endl;
@@ -69,15 +67,34 @@ void MainWindow::on_pushButtonStart_clicked()
         out << "Slackware" << endl;
         }
 
-      } else {
-        qWarning("Could not open file");
-      }
+      } else qWarning("Could not open file");
 
-      // Закрываем файл
       file.close();
       int res3 = clock()-timeStart3;
       QString valueAsString3 = QString::number(res3);
       ui->listWidget->addItem("Write time->");
       ui->listWidget->addItem(valueAsString3);
+
+      int timeStart4 = clock();
+      QTextStream out2(stdout);
+
+        QFile file2("distros.txt");
+
+        if (!file2.open(QIODevice::ReadOnly)) {
+          qWarning("Cannot open file for reading");
+        }
+
+        QTextStream in2(&file2);
+
+        while (!in2.atEnd()) {
+          QString line = in2.readLine();
+          //ui->listWidget_2->addItem(line);
+        }
+
+        file2.close();
+        int res4 = clock()-timeStart4;
+        QString valueAsString4 = QString::number(res4);
+        ui->listWidget->addItem("Read time->");
+        ui->listWidget->addItem(valueAsString4);
 }
 
